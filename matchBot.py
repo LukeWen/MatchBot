@@ -68,21 +68,21 @@ async def roll(msg: TextMsg):
                 "text": {
                     "type": "kmarkdown",
                     "content": "**组队信息**"
-                }
-            },
-            {
-            "type": "section",
-            "text": {
-                "type": "paragraph",
-                "rows": ''' + str(len (matchBoard)) + ''',
-                "fields": ['''
+                }},'''
         for key, values in matchBoard.items():
             replyJson = replyJson + '''{
-                "type": "kmarkdown",
-                "content": "发布者：(met)'''+ str(key) +'''(met)\\n信息：''' + values[0] + '''\\t截止时间：''' + values[1].astimezone(beijing).strftime("%m-%d %H:%M:%S") + '''"
-              },'''
+                "type": "section",
+                "text": {
+                    "type": "kmarkdown",
+                    "content": "发布者：(met)'''+ str(key) +'''(met)\\n信息：''' + values[0] + '''"}},{
+                    "type": "countdown",
+                    "mode": "second",
+                    "startTime": '''+str(int(nowtime.timestamp())*1000 + 3000)+''',
+                    "endTime": '''+str(int(values[1].timestamp())*1000 + 3000)+'''
+                },'''
         replyJson = replyJson[:-1]
-        replyJson = replyJson + ']}}]}]'
+        replyJson = replyJson + ']}]'
+        print(replyJson)
         await msg.ctx.send_card_temp(replyJson)
 
 def filter_dict(d, f):
