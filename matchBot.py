@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from khl import TextMsg, Bot, Cert
 
 # load config from config/botConfig.json, replace `path` points to your own config file
@@ -15,6 +15,8 @@ with open('./jsonTemplate/menu.json', 'r', encoding='utf-8') as menu:
 cert = Cert(client_id = config['client_id'], client_secret = config['client_secret'], token = config['token'])
 bot = Bot(cmd_prefix=['.', '。'], cert=cert)
 matchBoard = dict()
+utc = timezone.utc
+beijing = timezone(timedelta(hours=8))
 
 @bot.command(name='菜单')
 async def roll(msg: TextMsg):
@@ -33,13 +35,13 @@ async def roll(msg: TextMsg, t_info: str, t_time: str = 300):
         if int_time < 10:
             await msg.reply_temp('时间过短请重新申请')
         else:
-            ddl = datetime.now() + timedelta(seconds = int(t_time))
+            ddl = datetime.utcnow().replace(tzinfo=utc) + timedelta(seconds = int(t_time))
             matchInfo = (t_info, ddl)
             matchBoard[msg.author_id] = matchInfo
             print(msg.author_id)
             print(t_info)
             print(ddl.strftime("%Y-%m-%d %H:%M:%S"))
-            await msg.reply_temp('(met)' + msg.author_id + '(met)发布成功\n信息：'+ t_info +' 截止时间：' + ddl.strftime("%Y-%m-%d %H:%M:%S") )
+            await msg.reply_temp('(met)' + msg.author_id + '(met)发布成功\n信息：'+ t_info +' 截止时间：' + ddl.astimezone(beijing).strftime("%Y-%m-%d %H:%M:%S") )
 
 
 @bot.command(name='取消组队')
@@ -49,7 +51,7 @@ async def roll(msg: TextMsg):
 
 @bot.command(name='所有组队')
 async def roll(msg: TextMsg):
-    nowtime = datetime.now()
+    nowtime = datetime.utcnow().replace(tzinfo=utc)
     global matchBoard
     matchBoard = filter_dict(matchBoard, lambda k,v: nowtime < v[1])
     if (len (matchBoard) < 1):
@@ -77,7 +79,7 @@ async def roll(msg: TextMsg):
         for key, values in matchBoard.items():
             replyJson = replyJson + '''{
                 "type": "kmarkdown",
-                "content": "发布者：(met)'''+ str(key) +'''(met)\\n信息：''' + values[0] + '''\\t截止时间：''' + values[1].strftime("%m-%d %H:%M:%S") + '''"
+                "content": "发布者：(met)'''+ str(key) +'''(met)\\n信息：''' + values[0] + '''\\t截止时间：''' + values[1].astimezone(beijing).strftime("%m-%d %H:%M:%S") + '''"
               },'''
         replyJson = replyJson[:-1]
         replyJson = replyJson + ']}}]}]'
