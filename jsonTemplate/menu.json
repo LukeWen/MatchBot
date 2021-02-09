@@ -1,0 +1,41 @@
+[
+  {
+    "type": "card",
+    "theme": "secondary",
+    "size": "lg",
+    "modules": [
+      {
+        "type": "section",
+        "text": {
+          "type": "plain-text",
+          "content": "命令菜单"
+        }
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "paragraph",
+          "rows": 4,
+          "fields": [
+            {
+              "type": "kmarkdown",
+              "content": "**.菜单** 显示此帮助页面"
+            },
+            {
+              "type": "kmarkdown",
+              "content": "**.组队 组队信息 有效时间（单位：秒, 默认300秒）重复发布会覆盖掉之前发布的信息，单次发布有效时间最长30分钟，发布有害信息会被永久封禁** 例： .组队 \"快来啊 2=4\" 360"
+            },
+            {
+              "type": "kmarkdown",
+              "content": "**.取消组队** 取消已发布的组队信息"
+            },
+            {
+              "type": "kmarkdown",
+              "content": "**.所有组队** 查看所有组队信息"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
