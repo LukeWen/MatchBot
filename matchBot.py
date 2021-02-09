@@ -36,7 +36,10 @@ async def roll(msg: TextMsg, t_info: str, t_time: str = 300):
             ddl = datetime.now() + timedelta(seconds = int(t_time))
             matchInfo = (t_info, ddl)
             matchBoard[msg.author_id] = matchInfo
-            await msg.reply_temp('组队成功:(met)' + msg.author_id + '(met) 截止时间：' + ddl.strftime("%Y-%m-%d %H:%M:%S") )
+            print(msg.author_id)
+            print(t_info)
+            print(ddl.strftime("%Y-%m-%d %H:%M:%S"))
+            await msg.reply_temp('(met)' + msg.author_id + '(met)发布成功\n信息：'+ t_info +' 截止时间：' + ddl.strftime("%Y-%m-%d %H:%M:%S") )
 
 
 @bot.command(name='取消组队')
